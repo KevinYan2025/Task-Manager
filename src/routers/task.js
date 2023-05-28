@@ -40,21 +40,16 @@ router.get('/tasks',auth, async (req,res)=>{
         if(req.query.completed){
             match.completed=req.query.completed === 'true'
         }
-
     try {
-        // let tasks
-        // //check if the query string is provided
-        // if(req.query.completed){
-        //     const completed=req.query.completed==='true'
-        //     tasks =await Task.find({owner:req.user.id,completed})
-        // }else{
-        //     tasks =await Task.find({owner:req.user.id})
-        // }
          await req.user.populate({
             path:'tasks',
-            match
+            match,
+            options:{
+                limit:parseInt(req.query.limit),
+                skip:parseInt(req.query.skip)
+            }
         })
-        
+
         res.status(200).send(req.user.tasks)
     } catch (error) {
         res.status(400).send(error)
