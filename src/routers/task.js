@@ -33,16 +33,29 @@ router.get('/tasks/:id', auth, async (req,res) => {
     }
 })
 
-//reading all tasks data.
+//reading all tasks data   /tasks?completed=true
 router.get('/tasks',auth, async (req,res)=>{
-    try {
-    //    console.log(req.user._id);
-        const tasks =await Task.find({owner:req.user.id})
-        console.log(tasks);
-        if(!tasks){
-            return  res.status(404).send({error:'Task does not exsit!'})
+
+        let match = {}
+        if(req.query.completed){
+            match.completed=req.query.completed === 'true'
         }
-        res.status(200).send(tasks)
+
+    try {
+        // let tasks
+        // //check if the query string is provided
+        // if(req.query.completed){
+        //     const completed=req.query.completed==='true'
+        //     tasks =await Task.find({owner:req.user.id,completed})
+        // }else{
+        //     tasks =await Task.find({owner:req.user.id})
+        // }
+         await req.user.populate({
+            path:'tasks',
+            match
+        })
+        
+        res.status(200).send(req.user.tasks)
     } catch (error) {
         res.status(400).send(error)
     }

@@ -48,6 +48,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     }]
+},{
+    timestamps:true
 })
 
 //Virtual fields are not persisted in the database but allow you to establish relationships between models.
