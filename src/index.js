@@ -35,12 +35,12 @@ app.listen(port,()=>{
 
 
 
-const main = async () => {
-    // const task = await Task.findById('6470c04db8c28035f22bfe19')
-    // await task.populate('owner')
-    //  console.log(task.owner);
-    const user = await User.findById('6470bfd6b8c28035f22bfe10')
-    await user.populate('tasks')//populates the tasks virtual field in the user object with the associated tasks. It fetches the tasks from the Task collection based on the defined relationship.
-    console.log((user.tasks));
-}
-main()
+// const main = async () => {
+//     const task = await Task.findById('6470c04db8c28035f22bfe19')
+//     await task.populate('owner')
+//      console.log(task.owner);
+//     // const user = await User.findById('6470bfd6b8c28035f22bfe10')
+//     // await user.populate('tasks')//populates the tasks virtual field in the user object with the associated tasks. It fetches the tasks from the Task collection based on the defined relationship.
+//     // console.log((user.tasks));
+// }
+// main()
