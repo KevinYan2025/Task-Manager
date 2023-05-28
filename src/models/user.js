@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -94,7 +95,16 @@ userSchema.pre('save',async function(next){
         user.password=await bcrypt.hash(user.password,8)
     }
 
-    next()//to stop the operation
+    next()//to start the operation
+})
+
+//middleware that delete user tasks when user is remove
+//the { document: true, query: false } options ensures that the middleware is only executed when calling a method on a document instance.
+userSchema.pre('deleteOne',{ document: true, query: false } ,async function(next){
+    const user = this
+    await Task.deleteMany({owner:user.id})
+
+    next()
 })
 
 
