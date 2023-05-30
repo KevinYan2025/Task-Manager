@@ -8,15 +8,7 @@ const taskRouter = require('./routers/task')
 const app = express()
 const port=process.env.port||3000
 
-// const multer = require("multer");
-// const upload = multer({
-//     dest:'image'
-// })
 
-// app.post('/upload', upload.single('upload'), (req,res)=>{
-//     res.send()
-// })
-//set up middleware allow it parsejson data
 app.use(express.json())
 app.use(userRouter)
 app.use(taskRouter)

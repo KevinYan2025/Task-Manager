@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const auth = require('../middleware/auth')
 const multer = require('multer')
 const { castObject } = require('../models/task')
+const sharp = require('sharp')
 
 // Create new user data
 router.post('/users', async (req, res) => {
@@ -111,8 +112,10 @@ const upload = multer({
 
 //upload a user profile
 router.post('/users/me/avatar',auth,upload.single('avatar'),async (req,res) => {
-   req.user.avatar=req.file.buffer  //store the file buffer in the database
-   await req.user.save()
+  //using sharp to resize out avatar
+  const buffer = await sharp(req.file.buffer).resize({width:250,height:250}).png().toBuffer()
+  req.user.avatar=buffer
+  await req.user.save()
     res.send()
 },(error,req,res,next) => { //to handle uncaught error
     res.status(400).send({error:error.message})
@@ -133,7 +136,7 @@ router.get('/users/:id/avatar', async (req,res) => {
         if(!user || !user.avatar){
             throw new Error()
         }
-        
+
         res.set('Content-Type','image/jpg')
         res.send(user.avatar)
     } catch (error) {
