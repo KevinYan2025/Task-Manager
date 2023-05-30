@@ -3,6 +3,7 @@ const User = require('../models/user')
 const router = new express.Router()
 const bcrypt = require('bcryptjs')
 const auth = require('../middleware/auth')
+const multer = require('multer')
 
 // Create new user data
 router.post('/users', async (req, res) => {
@@ -92,6 +93,14 @@ router.delete('/users/me', auth, async (req,res) => {
     } catch (error) {
         res.status(500).send(error)
     }
+})
+
+const upload = multer({
+    dest:'images' //set the path to where we store the image
+})
+//upload a user profile
+router.post('/users/me/avatar',upload.single('avatar'),(req,res) => {
+    res.send()
 })
 
 module.exports=router
