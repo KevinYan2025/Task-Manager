@@ -4,6 +4,7 @@ const router = new express.Router()
 const bcrypt = require('bcryptjs')
 const auth = require('../middleware/auth')
 const multer = require('multer')
+const { castObject } = require('../models/task')
 
 // Create new user data
 router.post('/users', async (req, res) => {
@@ -123,4 +124,22 @@ router.delete('/users/me/avatar',auth,async(req,res) => {
     await req.user.save()
     res.send()
 })
+
+//fetch avatar
+router.get('/users/:id/avatar', async (req,res) => {
+    try {
+        const user = await User.findById(req.params.id)
+
+        if(!user || !user.avatar){
+            throw new Error()
+        }
+        
+        res.set('Content-Type','image/jpg')
+        res.send(user.avatar)
+    } catch (error) {
+        res.status(404).send()
+    }
+
+})
+
 module.exports=router
