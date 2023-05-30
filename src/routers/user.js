@@ -100,20 +100,20 @@ const upload = multer({
     limits:{
         fileSize:1000000
     },
-    fileFilter(req,file,cb){
-        if(!file.originalname.match(/\.(doc|docx)$/)){
-          return  cb(new Error('Please upload a word document!'))
+    fileFilter(req,file,cb){ //filter out the invalid file type
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+           return cb(new Error('Please upload only jpg, jpeg or png!'))
         }
-
-        cb(undefined,true) //callback function when file is accept
-        // cb(new Error('File must be a PDF'))
-        // cb(undefined,true)
-        // cd(undefined,false)
+        cb(undefined,true)
     }
 })
+
+
 //upload a user profile
 router.post('/users/me/avatar',upload.single('avatar'),(req,res) => {
     res.send()
+},(error,req,res,next) => { //to handle uncaught error
+    res.status(400).send({error:error.message})
 })
 
 module.exports=router

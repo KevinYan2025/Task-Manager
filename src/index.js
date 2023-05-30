@@ -10,7 +10,7 @@ const port=process.env.port||3000
 
 // const multer = require("multer");
 // const upload = multer({
-//     dest:'images'
+//     dest:'image'
 // })
 
 // app.post('/upload', upload.single('upload'), (req,res)=>{
