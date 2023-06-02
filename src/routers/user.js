@@ -6,13 +6,18 @@ const auth = require('../middleware/auth')
 const multer = require('multer')
 const { castObject } = require('../models/task')
 const sharp = require('sharp')
+const {sendWelcomeEmail, sendCancelationEmail} = require('../emails/accounts')
 
 // Create new user data
 router.post('/users', async (req, res) => {
-  const user = new User(req.body)
 
     try {
+        if(await User.findOne({email:req.body.email})){
+           return res.status(400).send({error:'Email already exsit!'})
+        }
+        const user = new User(req.body)
         await user.save()
+        sendWelcomeEmail(req.body.email,req.body.name)
         const token =await user.generateAuthToken()
         user.token=user.token.concat(token)
         res.status(201).send({user,token})
@@ -89,8 +94,9 @@ router.patch('/users/me', auth, async (req,res) => {
 //delete a user profile
 router.delete('/users/me', auth, async (req,res) => {
     try {
-    
+        const user = req.user
          await req.user.deleteOne()
+         sendCancelationEmail(user.email,user.name) 
         res.send(req.user)
     } catch (error) {
         res.status(500).send(error)
