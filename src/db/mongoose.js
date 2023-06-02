@@ -1,4 +1,4 @@
 const mongoose = require('mongoose')
 
-mongoose.connect(process.env.MONGOOSE_API_KEY)
+mongoose.connect(process.env.MONGODB_URI)
 
