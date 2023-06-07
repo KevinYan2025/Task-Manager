@@ -19,8 +19,8 @@ router.post('/users', async (req, res) => {
         await user.save()
         sendWelcomeEmail(req.body.email,req.body.name)
         const token =await user.generateAuthToken()
-        user.token=user.token.concat(token)
-        res.status(201).send({user,token})
+        user.tokens=user.tokens.concat(token)
+        res.status(201).send({user, token})
     } catch (error) {
         res.status(400).send(error)
     }
@@ -42,8 +42,8 @@ router.post('/users/login', async (req,res) => {
 router.post('/users/logout',auth, async (req,res) => {
     try {
         
-        req.user.token = req.user.token.filter((token) => {
-         token.token !== req.token})
+        req.user.tokens = req.user.tokens.filter((tokens) => {
+         tokens.token !== req.token})
         await req.user.save()
 
         res.send()
@@ -55,7 +55,8 @@ router.post('/users/logout',auth, async (req,res) => {
 //logout all in which wipe off all the token 
 router.post('/users/logoutAll', auth, async (req,res) => {
     try {
-        req.user.token=[]
+
+        req.user.tokens=[]
         await req.user.save()
 
         res.send()
@@ -129,9 +130,14 @@ router.post('/users/me/avatar',auth,upload.single('avatar'),async (req,res) => {
 
 //delete a user avatar
 router.delete('/users/me/avatar',auth,async(req,res) => {
+    try{
     req.user.avatar=undefined
+
     await req.user.save()
     res.send()
+    }catch(error){
+        res.status(400).send(error)
+    }
 })
 
 //fetch avatar
